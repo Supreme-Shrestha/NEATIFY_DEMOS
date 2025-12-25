@@ -42,11 +42,9 @@ def main():
     
     try:
         for gen in range(args.generations):
-            # Randomly select track for this generation
-            current_track = random.choice(list(TRACKS.keys()))
-            print(f"🏁 Generation {gen + 1}/{args.generations} | Track: {TRACKS[current_track]['name']}")
+            print(f"🏁 Generation {gen + 1}/{args.generations} | Track: {TRACKS[args.track]['name']}")
             
-            # Run generation (workers will evaluate genomes)
+            # Run generation - DistributedPopulation will send genomes to workers
             population.run_generation(lambda genomes: None)
             
             # Get statistics
