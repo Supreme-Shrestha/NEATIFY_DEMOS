@@ -3,6 +3,7 @@ Neatify Master Node for Self-Driving Car Training
 Uses neatify's built-in DistributedPopulation for coordinating workers.
 """
 import argparse
+import random
 from neatify import DistributedPopulation, EvolutionConfig
 from config import create_config, TRACKS
 
@@ -41,7 +42,9 @@ def main():
     
     try:
         for gen in range(args.generations):
-            print(f"🏁 Generation {gen + 1}/{args.generations}")
+            # Randomly select track for this generation
+            current_track = random.choice(list(TRACKS.keys()))
+            print(f"🏁 Generation {gen + 1}/{args.generations} | Track: {TRACKS[current_track]['name']}")
             
             # Run generation (workers will evaluate genomes)
             population.run_generation(lambda genomes: None)
