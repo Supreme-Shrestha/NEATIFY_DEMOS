@@ -28,13 +28,21 @@ def main():
     # Create evolution config
     config = create_config()
     
+    # Create distributed configuration
+    from neatify.distributed.config import DistributedConfig
+    dist_config = DistributedConfig(
+        host='0.0.0.0',  # Listen on all interfaces
+        port=args.port
+    )
+    
     # Create distributed population
     print("🚀 Initializing distributed population...")
     population = DistributedPopulation(
         pop_size=config.population_size,
         num_inputs=5,  # 4 radars + speed
         num_outputs=2,  # Turn left/right
-        config=config
+        config=config,
+        distributed_config=dist_config
     )
     
     print(f"✅ Population initialized ({config.population_size} genomes)")
