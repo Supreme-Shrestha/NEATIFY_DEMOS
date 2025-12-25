@@ -44,7 +44,7 @@ def main():
             print(f"🏁 Generation {gen + 1}/{args.generations}")
             
             # Run generation (workers will evaluate genomes)
-            population.run_generation(evaluation_function=None)
+            population.run_generation(lambda genomes: None)
             
             # Get statistics
             best = max(population.genomes, key=lambda g: g.fitness if g.fitness else 0)
