@@ -7,7 +7,7 @@ os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 import argparse
 import neatify
-from neatify import Worker
+from neatify.distributed.worker import Worker
 from neatify import NeatModule
 from simulation import SimulationManager, Car, evaluate_car_fitness
 from config import TRACKS
@@ -16,7 +16,6 @@ def main():
     parser = argparse.ArgumentParser(description="NEATify Worker Node")
     parser.add_argument("--master", type=str, default="127.0.0.1", help="Master node IP address")
     parser.add_argument("--port", type=int, default=5000, help="Port to connect to")
-    parser.add_argument("--auth", type=str, default="secret", help="Authentication key")
     
     args = parser.parse_args()
     
@@ -53,8 +52,7 @@ def main():
     try:
         worker = Worker(
             master_address=args.master, 
-            port=args.port,
-            auth_key=args.auth.encode('utf-8')
+            port=args.port
         )
         worker.start(fitness_function)
     except KeyboardInterrupt:

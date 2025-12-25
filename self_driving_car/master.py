@@ -17,50 +17,15 @@ def main():
     # Create configuration
     evo_config = create_config()
     
-    # Create distributed configuration
-    dist_config = DistributedConfig(
-        auth_key=args.auth.encode('utf-8'),
-        enable_fault_tolerance=True
-    )
-    
     print(f"Initializing Master Node on port {args.port}...")
     
-    # Initialize Distributed Population
-    # pop_size must be divisible by workers ideally, or neatify handles it.
+    # Initialize Distributed Population using Defaults
     population = DistributedPopulation(
-        max_workers=4, # Limit concurrent if needed, or dynamic
-        # neatify DistributedPopulation might take config as arg?
-        # Based on earlier inspection: DistributedPopulation(config, num_inputs, num_outputs) 
-        # But for distributed specific, maybe it uses DistributedConfig?
-        # Let's check init signature from history. 
-        # (self, pop_size: int, num_inputs: int, num_outputs: int, config: EvolutionConfig = None, distributed_config: DistributedConfig = None) (Inferred)
-        # Actually Step 83 showed: (self, pop_size: int, num_inputs: int, num_outputs: int, config: EvolutionConfig = None)
-        # It didn't start with distributed config.
-        # But neatify.distributed.config exists.
-        # Maybe config has distributed fields?
-        # Let's assume standard pop init for now but we need to bind to address.
-        # DistributedPopulation likely inherits from Population but overrides methods.
-        # Wait, if DistributedPopulation signature is (pop_size, inputs, outputs, config), 
-        # how do we set port/auth?
-        # Maybe via the `config` object if it has distributed fields?
-        # OR maybe there's a `.start_server()` method?
-        # Let's assume we pass distributed_config if the library supports it, or check simple usage.
-        # History Step 52: dir(DistributedPopulation) -> ['shutdown', 'speciate', 'run_generation'...]
-        # It didn't show start_server explicitly.
-        # Let's look at `inspect_pop.py` output again... it timed out waiting for workers.
-        # It was initialized as `DistributedPopulation(150, 2, 1)`.
-        # I suspect DistributedPopulation constructs the server in `__init__`.
-        # We might need to look closer or just try to pass kwargs if it accepts `**kwargs`.
-        
         pop_size=evo_config.population_size,
         num_inputs=5, # 4 radars + speed
         num_outputs=2, # Turn L/R
         config=evo_config
     )
-    
-    # If DistributedConfig is not passed in init, maybe we attach it?
-    # Or maybe we need to rely on defaults and hope 5000 is open.
-    # The `worker.py` uses `Worker` class.
     
     print("Waiting for workers to connect...")
     # It seems it waits during run_generation or implicitly?
