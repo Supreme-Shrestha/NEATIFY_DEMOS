@@ -16,18 +16,18 @@ sim_manager = SimulationManager()
 
 def create_evaluation_function(track_name):
     """Create an evaluation function for a specific track."""
-    def evaluation_function(genome):
-        """Evaluate a single genome."""
-        # Create network
-        net = NeatModule(genome)
-        
-        # Create car
-        track_surface = sim_manager.get_track_data(track_name)
-        car = Car(track_name, track_surface)
-        
-        # Evaluate and return fitness
-        fitness = evaluate_car_fitness(net, car, max_frames=2000)
-        return fitness
+    def evaluation_function(genomes):
+        """Evaluate a batch of genomes as required by neatify-ai 0.1.4."""
+        for genome in genomes:
+            # Create network
+            net = NeatModule(genome)
+            
+            # Create car
+            track_surface = sim_manager.get_track_data(track_name)
+            car = Car(track_name, track_surface)
+            
+            # Evaluate and set fitness
+            genome.fitness = evaluate_car_fitness(net, car, max_frames=2000)
     
     return evaluation_function
 
