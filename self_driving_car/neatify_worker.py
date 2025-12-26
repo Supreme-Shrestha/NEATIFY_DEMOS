@@ -140,7 +140,7 @@ def main():
                     if overlay_surface:
                         screen.blit(overlay_surface, (0, 0))
                     
-                    # UI Overlay (Light Blue)
+                    # UI Overlay (Light Blue with Black Outline)
                     ui_lines = [
                         f"GENERATION: {gen_num}",
                         f"TRACK: {track_info['name']}",
@@ -148,9 +148,18 @@ def main():
                         f"FRAME: {frames}/2000"
                     ]
                     
+                    def draw_text_with_outline(txt, x, y):
+                        # Draw outline (Black)
+                        offsets = [(-2, -2), (2, -2), (-2, 2), (2, 2), (0, -2), (0, 2), (-2, 0), (2, 0)]
+                        for ox, oy in offsets:
+                            outline_surf = font.render(txt, True, (0, 0, 0))
+                            screen.blit(outline_surf, (x + ox, y + oy))
+                        # Draw main text (Light Blue)
+                        text_surf = font.render(txt, True, LIGHT_BLUE)
+                        screen.blit(text_surf, (x, y))
+
                     for i, text in enumerate(ui_lines):
-                        text_surf = font.render(text, True, LIGHT_BLUE)
-                        screen.blit(text_surf, (15, 15 + i * 30))
+                        draw_text_with_outline(text, 15, 15 + i * 35)
                     
                     pygame.display.flip()
                     clock.tick(60)
