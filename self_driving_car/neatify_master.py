@@ -18,6 +18,7 @@ def main():
     parser.add_argument("--track", type=str, default="track1", choices=list(TRACKS.keys()), help="Track to train on")
     parser.add_argument("--generations", type=int, default=10, help="Number of generations")
     parser.add_argument("--workers", type=int, default=1, help="Minimum workers to wait for")
+    parser.add_argument("--pop-size", type=int, default=30, help="Population size")
     
     args = parser.parse_args()
     
@@ -32,6 +33,7 @@ def main():
     
     # Create evolution config
     config = create_config()
+    config.population_size = args.pop_size
     
     # Create distributed configuration
     from neatify.distributed.config import DistributedConfig
@@ -44,7 +46,7 @@ def main():
     # Create distributed population
     print("🚀 Initializing distributed population...")
     population = DistributedPopulation(
-        pop_size=config.population_size,
+        pop_size=args.pop_size,
         num_inputs=5,  # 4 radars + speed
         num_outputs=2,  # Turn left/right
         config=config,
