@@ -9,6 +9,9 @@ import logging
 # Configure logging to see distributed communication
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+from neatify import DistributedPopulation, EvolutionConfig
+from config import create_config, TRACKS
+
 def main():
     parser = argparse.ArgumentParser(description="NEATify Distributed Master")
     parser.add_argument("--port", type=int, default=5000, help="Port to listen on")
