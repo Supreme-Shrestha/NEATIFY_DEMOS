@@ -55,11 +55,13 @@ def main():
     print(f"⏳ Waiting for workers to connect...\n")
     
     try:
+        tracks_list = list(TRACKS.keys())
         for gen in range(args.generations):
-            print(f"🏁 Generation {gen + 1}/{args.generations} | Track: {TRACKS[args.track]['name']}")
+            current_track = tracks_list[gen % len(tracks_list)]
+            print(f"🏁 Generation {gen + 1}/{args.generations} | Track: {TRACKS[current_track]['name']}")
             
             # Run generation
-            print(f"📡 Distributing Generation {gen + 1} to workers...")
+            print(f"📡 Distributing Gen {gen + 1} to workers...")
             population.run_generation(lambda genomes: None)
             
             # Diagnostic check
