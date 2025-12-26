@@ -7,9 +7,13 @@ import os
 os.environ["SDL_VIDEODRIVER"] = "dummy"  # Headless mode
 
 import argparse
+import logging
 from neatify.distributed import WorkerNode
 from neatify import NeatModule
 from simulation import SimulationManager, Car, evaluate_car_fitness
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Initialize simulation manager globally
 sim_manager = SimulationManager()
@@ -18,7 +22,10 @@ def create_evaluation_function(track_name):
     """Create an evaluation function for a specific track."""
     def evaluation_function(genomes):
         """Evaluate a batch of genomes as required by neatify-ai 0.1.4."""
-        for genome in genomes:
+        print(f"📋 Evaluating batch of {len(genomes)} genomes on {track_name}...")
+        for i, genome in enumerate(genomes):
+            if i % 10 == 0 and i > 0:
+                print(f"  ...processed {i}/{len(genomes)} genomes")
             # Create network
             net = NeatModule(genome)
             

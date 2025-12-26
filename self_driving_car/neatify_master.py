@@ -4,8 +4,10 @@ Uses neatify's built-in DistributedPopulation for coordinating workers.
 """
 import argparse
 import random
-from neatify import DistributedPopulation, EvolutionConfig
-from config import create_config, TRACKS
+import logging
+
+# Configure logging to see distributed communication
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def main():
     parser = argparse.ArgumentParser(description="NEATify Distributed Master")
@@ -32,7 +34,8 @@ def main():
     from neatify.distributed.config import DistributedConfig
     dist_config = DistributedConfig(
         host='0.0.0.0',  # Listen on all interfaces
-        port=args.port
+        port=args.port,
+        min_workers=args.workers
     )
     
     # Create distributed population
