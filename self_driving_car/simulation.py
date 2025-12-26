@@ -81,6 +81,9 @@ class Car(pygame.sprite.Sprite):
         self.start_line_pos = self.start_pos
         self.near_start_line = False
         self.passed_start_line = False
+        
+        # Initial sensor check so get_data() is not empty on first call
+        self.check_sensors()
 
     def update(self):
         if not self.alive:
