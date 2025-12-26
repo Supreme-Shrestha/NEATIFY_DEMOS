@@ -194,13 +194,16 @@ def evaluate_car_fitness(net, car, max_frames=2000):
         
         # Inference
         with torch.no_grad():
-             output = net(input_data).squeeze(0)  # Remove batch dim only
+             raw_output = net(input_data)
+             output = raw_output.flatten()
         
-        # Control - ensure output has 2 elements
+        # Control - handle any number of outputs safely
         car.direction = 0
-        if len(output) >= 2:
-            if output[0] > 0.7: car.direction = 1
-            if output[1] > 0.7: car.direction = -1
+        if output.numel() >= 1:
+            if output[0].item() > 0.7: 
+                car.direction = 1
+            elif output.numel() >= 2 and output[1].item() > 0.7: 
+                car.direction = -1
         
         car.update()
         frames += 1
