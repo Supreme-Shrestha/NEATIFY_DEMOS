@@ -58,8 +58,13 @@ def main():
         for gen in range(args.generations):
             print(f"🏁 Generation {gen + 1}/{args.generations} | Track: {TRACKS[args.track]['name']}")
             
-            # Run generation - DistributedPopulation will send genomes to workers
+            # Run generation
+            print(f"📡 Distributing Generation {gen + 1} to workers...")
             population.run_generation(lambda genomes: None)
+            
+            # Diagnostic check
+            evaluated = [g for g in population.genomes if g.fitness is not None and g.fitness != 0]
+            print(f"✅ Received non-zero results for {len(evaluated)}/{len(population.genomes)} genomes")
             
             # Get statistics
             best = max(population.genomes, key=lambda g: g.fitness if g.fitness else 0)

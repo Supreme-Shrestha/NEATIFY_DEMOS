@@ -34,7 +34,13 @@ def create_evaluation_function(track_name):
             car = Car(track_name, track_surface)
             
             # Evaluate and set fitness
-            genome.fitness = evaluate_car_fitness(net, car, max_frames=2000)
+            try:
+                fit = evaluate_car_fitness(net, car, max_frames=2000)
+                genome.fitness = fit
+                print(f"  ✅ Genome {genome.id} fitness: {fit:.2f}")
+            except Exception as e:
+                print(f"  ❌ Error evaluating genome {genome.id}: {e}")
+                genome.fitness = 0.0
     
     return evaluation_function
 
