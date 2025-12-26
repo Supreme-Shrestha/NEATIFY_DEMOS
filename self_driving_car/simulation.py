@@ -193,9 +193,16 @@ def evaluate_car_fitness(net, car, max_frames=2000):
         input_data = torch.tensor(car.get_data(), dtype=torch.float32).unsqueeze(0)
         
         # Inference
-        with torch.no_grad():
-             raw_output = net(input_data)
-             output = raw_output.flatten()
+        try:
+            with torch.no_grad():
+                 raw_output = net(input_data)
+                 output = raw_output.flatten()
+        except Exception as e:
+            print(f"\n❌ FORWARD PASS ERROR: {e}")
+            print(f"  Input Shape: {input_data.shape} (Expected [1, 5])")
+            import traceback
+            traceback.print_exc()
+            raise e
         
         # Control - handle any number of outputs safely
         car.direction = 0
